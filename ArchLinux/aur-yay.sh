@@ -8,7 +8,8 @@ if ! command -v git; then
 	sudo pacman -S git --noconfirm
 fi
 
-# Install yay
+sudo pacman -S base-devel --needed --noconfirm
+
 cd ~
 git clone https://aur.archlinux.org/yay.git
 cd yay

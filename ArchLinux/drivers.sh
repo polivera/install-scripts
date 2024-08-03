@@ -17,16 +17,16 @@ sudo pacman -S \
 	--needed --noconfirm
 
 # Sound
-pacman -S \
+sudo pacman -S \
 	pipewire \
-	lib32-pipwire \
+	lib32-pipewire \
 	libpipewire \
 	lib32-libpipewire \
 	pipewire-audio \
 	--needed --noconfirm
 
 # Video
-pacman -S \
+sudo pacman -S \
 	mesa \
 	lib32-mesa \
 	vulkan-radeon \
@@ -41,20 +41,20 @@ pacman -S \
 	--needed --noconfirm
 
 # Bluetooth
-pacman -S \
+sudo pacman -S \
 	bluez \
 	bluez-utils \
 	--needed --noconfirm
 
 # Filesystems
-pacman -S \
+sudo pacman -S \
 	ntfs-3g \
 	exfat-utils \
 	--needed --noconfirm
 
 # Misc
 # (should put these somewhere else)
-pacman -S \
+sudo pacman -S \
 	openssh \
 	zip \
 	unzip \
