@@ -13,15 +13,18 @@ sudo pacman -S \
 
 go install github.com/rinchsan/gosimports/cmd/gosimports@latest
 go install github.com/fatih/gomodifytags@latest
+go install github.com/a-h/templ/cmd/templ@latest
 
 # PHP Specific -----------------------------------------------------------------
 sudo pacman -S \
 	php \
 	composer \
+	xdebug \
 	--needed --noconfirm
 
 yay -S \
 	php-cs-fixer \
+	phpactor \
 	--needed --noconfirm
 
 # Shell Specific ---------------------------------------------------------------
@@ -38,6 +41,9 @@ sudo pacman -S \
 	tailwindcss-language-server \
 	typescript-language-server \
 	yaml-language-server \
+	vscode-css-languageserver \
+	vscode-html-languageserver \
+	vscode-json-languageserver \
 	prettier \
 	--needed --noconfirm
 
@@ -53,7 +59,7 @@ sudo pacman -S \
 sudo pacman -S \
 	docker \
 	--needed --noconfirm
-sudo chmod -aG docker $USER
+sudo usermod -aG docker $USER
 
 # Misc Tools -------------------------------------------------------------------
 sudo pacman -S \
@@ -65,6 +71,7 @@ sudo pacman -S \
 
 yay -S \
 	grpcurl \
+	sql-language-server \
 	--needed --noconfirm
 
 # Neovim -----------------------------------------------------------------------
@@ -75,4 +82,5 @@ sudo pacman -S \
 if [ ! -d $HOME/Projects/Personal/nvim-conf ]; then
 	git clone https://gitlab.com/xapitan/nvim-conf.git $HOME/Projects/Personal/nvim-conf
 	ln -s $HOME/Projects/Personal/nvim-conf $HOME/.config/nvim
+	npm install -g neovim
 fi
