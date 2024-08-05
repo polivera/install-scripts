@@ -24,11 +24,29 @@ yay -S \
 	php-cs-fixer \
 	--needed --noconfirm
 
+# Shell Specific ---------------------------------------------------------------
+sudo pacman -S \
+	bash-language-server \
+	shellcheck \
+	shfmt \
+	--needed --noconfirm
+
 # Web Specific -----------------------------------------------------------------
 sudo pacman -S \
 	nodejs \
 	npm \
+	tailwindcss-language-server \
+	typescript-language-server \
+	yaml-language-server \
 	prettier \
+	--needed --noconfirm
+
+# Lua Specific -----------------------------------------------------------------
+sudo pacman -S \
+	lua \
+	luajit \
+	stylua \
+	lua-language-server \
 	--needed --noconfirm
 
 # Docker -----------------------------------------------------------------------
