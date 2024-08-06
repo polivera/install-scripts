@@ -11,6 +11,7 @@ sudo pacman -S \
 	plasma-workspace \
 	wl-clipboard \
 	ffmpeg \
+	timeshift \
 	--needed --noconfirm
 
 sudo pacman -R kmix --noconfirm
@@ -18,5 +19,5 @@ sudo pacman -R kmix --noconfirm
 yay -S \
 	1password \
 	spotify \
-	google-chrome \
+	brave \
 	--needed --noconfirm
