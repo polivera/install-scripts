@@ -43,10 +43,9 @@ sudo npm install -g vscode-json-languageservice
 # Lua Specific -----------------------------------------------------------------
 sudo dnf -y install \
 	lua \
-	luajit \
-	stylua
+	luajit
 
-if ! command -v stylua; then
+if ! command -v stylua 2>/dev/null; then
 	curl -Lo stylua-linux.zip https://github.com/JohnnyMorganz/StyLua/releases/download/v0.20.0/stylua-linux-x86_64.zip
 	unzip stylua-linux
 	mkdir -p "$HOME"/.local/bin 2>/dev/null
@@ -55,6 +54,7 @@ fi
 # Docker -----------------------------------------------------------------------
 sudo dnf -y install \
 	docker
+
 sudo usermod -aG docker pablo
 
 # Misc Tools -------------------------------------------------------------------
@@ -65,8 +65,7 @@ sudo dnf -y install \
 
 # Neovim -----------------------------------------------------------------------
 sudo dnf -y install \
-	neovim \
-	--needed --noconfirm
+	neovim
 
 if [ ! -d "$HOME"/Projects/Personal/nvim-conf ]; then
 	git clone https://gitlab.com/xapitan/nvim-conf.git "$HOME"/Projects/Personal/nvim-conf
