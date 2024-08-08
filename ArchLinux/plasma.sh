@@ -8,8 +8,15 @@ sudo pacman -S \
 	kalarm \
 	libreoffice-fresh \
 	sddm \
+	sddm-kcm \
 	plasma-workspace \
 	wl-clipboard \
+	qt6-multimedia-ffmpeg \
+	pipewire-jack \
+	ttf-joypixels \
+	pyside6 \
+	cronie \
+	phonon-qt5-gstreamer \
 	ffmpeg \
 	timeshift \
 	--needed --noconfirm
@@ -21,3 +28,5 @@ yay -S \
 	spotify \
 	brave \
 	--needed --noconfirm
+
+sudo systemctl enable sddm
