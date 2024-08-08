@@ -79,8 +79,8 @@ sudo pacman -S \
 	neovim \
 	--needed --noconfirm
 
-if [ ! -d $HOME/Projects/Personal/nvim-conf ]; then
-	git clone https://gitlab.com/xapitan/nvim-conf.git $HOME/Projects/Personal/nvim-conf
-	ln -s $HOME/Projects/Personal/nvim-conf $HOME/.config/nvim
+if [ ! -d "$HOME"/Projects/Personal/nvim-conf ]; then
+	git clone https://gitlab.com/xapitan/nvim-conf.git "$HOME"/Projects/Personal/nvim-conf
+	ln -s "$HOME"/Projects/Personal/nvim-conf "$HOME"/.config/nvim
 	npm install -g neovim
 fi

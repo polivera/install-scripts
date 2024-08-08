@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Go Specific ------------------------------------------------------------------
-sudo -y dnf install \
+sudo dnf -y install \
 	golang \
 	golang-x-tools-gopls \
 	delve
@@ -11,7 +11,7 @@ go install github.com/fatih/gomodifytags@latest
 go install github.com/a-h/templ/cmd/templ@latest
 
 # PHP Specific -----------------------------------------------------------------
-sudo -y dnf install \
+sudo dnf -y install \
 	php \
 	composer \
 	php-devel \
@@ -26,13 +26,13 @@ if command -v phpactor; then
 fi
 
 # Shell Specific ---------------------------------------------------------------
-sudo -y dnf install \
+sudo dnf -y install \
 	nodejs-bash-language-server \
 	shellcheck \
 	shfmt
 
 # Web Specific -----------------------------------------------------------------
-sudo -y dnf install \
+sudo dnf -y install \
 	nodejs \
 	nodejs-npm
 
@@ -41,7 +41,7 @@ npm install -g typescript-language-server typescript
 npm install -g vscode-css-languageservice
 npm install -g vscode-json-languageservice
 # Lua Specific -----------------------------------------------------------------
-sudo -y dnf install \
+sudo dnf -y install \
 	lua \
 	luajit \
 	stylua
@@ -53,12 +53,23 @@ if ! command -v stylua; then
 	mv stylua "$HOME"/.local/bin/
 fi
 # Docker -----------------------------------------------------------------------
-sudo -y dnf -y install \
+sudo dnf -y install \
 	docker
 sudo usermod -aG docker pablo
 
 # Misc Tools -------------------------------------------------------------------
-sudo -y dnf -y install \
+sudo dnf -y install \
 	curl \
 	wget2 \
 	jq
+
+# Neovim -----------------------------------------------------------------------
+sudo dnf -y install \
+	neovim \
+	--needed --noconfirm
+
+if [ ! -d "$HOME"/Projects/Personal/nvim-conf ]; then
+	git clone https://gitlab.com/xapitan/nvim-conf.git "$HOME"/Projects/Personal/nvim-conf
+	ln -s "$HOME"/Projects/Personal/nvim-conf "$HOME"/.config/nvim
+	npm install -g neovim
+fi
