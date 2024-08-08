@@ -16,13 +16,13 @@ sudo flatpak remote-add --if-not-exists flathub \
 	https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Obsidiab
-sudo flatpak install flathub md.obsidian.Obsidian
+sudo flatpak install -y flathub md.obsidian.Obsidian
 
 # Spotify
-sudo flatpak install flathub com.spotify.Client
+sudo flatpak install -y flathub com.spotify.Client
 
 # Flatseal
-sudo flatpak install flathub com.github.tchx84.Flatseal
+sudo flatpak install -y flathub com.github.tchx84.Flatseal
 
 # Timeshift --------------------------------------------------------------------
 sudo dnf -y install timeshift

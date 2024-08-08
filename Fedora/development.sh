@@ -65,6 +65,9 @@ sudo dnf -y install \
 	wget2 \
 	jq
 
+# Autoenv
+npm install -g '@hyperupcall/autoenv'
+
 # Neovim -----------------------------------------------------------------------
 sudo dnf -y install \
 	neovim

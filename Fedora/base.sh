@@ -28,3 +28,10 @@ sudo dnf -y swap mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
 # Firmware
 sudo dnf -y install rpmfusion-nonfree-release-tainted
 sudo dnf --repo=rpmfusion-nonfree-tainted install "*-firmware"
+
+# Nodejs (for dependencies)
+sudo dnf -y install \
+	nodejs \
+	nodejs-npm
+
+npm config set prefix "$HOME"/.local/npm-global
