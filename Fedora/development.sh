@@ -37,10 +37,11 @@ sudo dnf -y install \
 	nodejs \
 	nodejs-npm
 
-sudo npm install -g @tailwindcss/language-server
-sudo npm install -g typescript-language-server typescript
-sudo npm install -g vscode-css-languageservice
-sudo npm install -g vscode-json-languageservice
+npm install -g @tailwindcss/language-server
+npm install -g typescript-language-server typescript
+npm install -g vscode-css-languageservice
+npm install -g vscode-json-languageservice
+
 # Lua Specific -----------------------------------------------------------------
 sudo dnf -y install \
 	lua \
@@ -53,6 +54,7 @@ if ! command -v stylua 2>/dev/null; then
 	mv stylua "$HOME"/.local/bin/
 	rm stylua-linux.zip
 fi
+
 # Docker -----------------------------------------------------------------------
 sudo dnf -y install \
 	docker
@@ -75,5 +77,5 @@ sudo dnf -y install \
 if [ ! -d "$HOME"/Projects/Personal/nvim-conf ]; then
 	git clone https://gitlab.com/xapitan/nvim-conf.git "$HOME"/Projects/Personal/nvim-conf
 	ln -s "$HOME"/Projects/Personal/nvim-conf "$HOME"/.config/nvim
-	sudo npm install -g neovim
+	npm install -g neovim
 fi
