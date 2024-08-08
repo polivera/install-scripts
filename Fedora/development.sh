@@ -36,10 +36,10 @@ sudo dnf -y install \
 	nodejs \
 	nodejs-npm
 
-npm install -g @tailwindcss/language-server
-npm install -g typescript-language-server typescript
-npm install -g vscode-css-languageservice
-npm install -g vscode-json-languageservice
+sudo npm install -g @tailwindcss/language-server
+sudo npm install -g typescript-language-server typescript
+sudo npm install -g vscode-css-languageservice
+sudo npm install -g vscode-json-languageservice
 # Lua Specific -----------------------------------------------------------------
 sudo dnf -y install \
 	lua \
@@ -71,5 +71,5 @@ sudo dnf -y install \
 if [ ! -d "$HOME"/Projects/Personal/nvim-conf ]; then
 	git clone https://gitlab.com/xapitan/nvim-conf.git "$HOME"/Projects/Personal/nvim-conf
 	ln -s "$HOME"/Projects/Personal/nvim-conf "$HOME"/.config/nvim
-	npm install -g neovim
+	sudo npm install -g neovim
 fi
