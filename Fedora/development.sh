@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # Go Specific ------------------------------------------------------------------
+export GO_PATH=$HOME/.local/share/go
 sudo dnf -y install \
 	golang \
 	golang-x-tools-gopls \
@@ -47,9 +48,10 @@ sudo dnf -y install \
 
 if ! command -v stylua 2>/dev/null; then
 	curl -Lo stylua-linux.zip https://github.com/JohnnyMorganz/StyLua/releases/download/v0.20.0/stylua-linux-x86_64.zip
-	unzip stylua-linux
+	unzip stylua-linux.zip
 	mkdir -p "$HOME"/.local/bin 2>/dev/null
 	mv stylua "$HOME"/.local/bin/
+	rm stylua-linux.zip
 fi
 # Docker -----------------------------------------------------------------------
 sudo dnf -y install \
