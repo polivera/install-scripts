@@ -16,7 +16,7 @@ sudo dnf -y install \
 	tmux
 
 # Install starship
-# TODO: Here starship
+curl -sS https://starship.rs/install.sh | sh
 
 # Install dotfiles
 mkdir -p "$HOME"/Projects/Personal 2>/dev/null
