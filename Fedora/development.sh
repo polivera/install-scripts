@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Go Specific ------------------------------------------------------------------
-export GO_PATH=$HOME/.local/share/go
+export GOPATH=$HOME/.local/share/go
 sudo dnf -y install \
 	golang \
 	golang-x-tools-gopls \

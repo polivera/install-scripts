@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export GO_PATH=$HOME/.local/share/go
+export GOPATH=$HOME/.local/share/go
 
 if ! command -v yay; then
 	if ! command -v git; then
