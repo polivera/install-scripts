@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source ./env.sh
+
 sudo dnf -y install \
 	zsh \
 	zoxide \
@@ -10,7 +12,7 @@ sudo dnf -y install \
 	curl \
 	wget \
 	fzf \
-	fd \
+	fd-find \
 	ripgrep \
 	tldr \
 	tmux

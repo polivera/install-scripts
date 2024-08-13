@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source ./env.sh
+
 sudo dnf -y install \
 	git \
 	openssl \
@@ -27,7 +29,7 @@ sudo dnf -y swap mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
 
 # Firmware
 sudo dnf -y install rpmfusion-nonfree-release-tainted
-sudo dnf --repo=rpmfusion-nonfree-tainted install "*-firmware"
+sudo dnf -y --repo=rpmfusion-nonfree-tainted install "*-firmware"
 
 # Nodejs (for dependencies)
 sudo dnf -y install \

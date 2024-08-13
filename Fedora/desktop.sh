@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source ./env.sh
+
 # Brave Browser ----------------------------------------------------------------
 # Install dnf plugins
 sudo dnf -y install dnf-plugins-core
