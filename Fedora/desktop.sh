@@ -28,6 +28,6 @@ sudo flatpak install -y flathub com.github.tchx84.Flatseal
 
 # Timeshift --------------------------------------------------------------------
 sudo dnf -y install \
-    timeshift \
-    alacritty
-
+	timeshift \
+	alacritty \
+	nextcloud-client

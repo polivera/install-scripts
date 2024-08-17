@@ -16,6 +16,7 @@ sudo dnf -y install \
 	php \
 	composer \
 	php-devel \
+	php-pear \
 	php-pecl-xdebug3 \
 	php-cs-fixer
 
@@ -38,6 +39,7 @@ sudo dnf -y install \
 	nodejs-npm
 
 npm install -g @tailwindcss/language-server
+npm install -g tailwindcss
 npm install -g typescript-language-server typescript
 npm install -g vscode-css-languageservice
 npm install -g vscode-json-languageservice
