@@ -40,6 +40,7 @@ sudo dnf -y install \
 
 npm install -g @tailwindcss/language-server
 npm install -g tailwindcss
+npm install -g prettier
 npm install -g typescript-language-server typescript
 npm install -g vscode-css-languageservice
 npm install -g vscode-json-languageservice
