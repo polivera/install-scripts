@@ -76,11 +76,11 @@ timedatectl set-ntp true
 # Installing base system
 pacman -S archlinux-keyring --noconfirm
 pacstrap /mnt \
-    base \
-    linux-zen linux-firmware linux-headers dkms $UCODE_TYPE \
-    btrfs-progs grub grub-btrfs efibootmgr cryptsetup \
-    networkmanager avahi bluez bluez-utils \
-    sudo git neovim
+	base \
+	linux-zen linux-firmware linux-headers dkms $UCODE_TYPE \
+	btrfs-progs grub grub-btrfs efibootmgr cryptsetup \
+	networkmanager avahi bluez bluez-utils \
+	sudo git neovim reflector
 
 # Create Swapfile
 arch-chroot /mnt btrfs filesystem mkswapfile --size ${SWAP_SIZE_GB}g --uuid clear /swap/swapfile
@@ -89,25 +89,24 @@ mkswap /mnt/swap/swapfile
 swapon /mnt/swap/swapfile
 
 # Generate fstabs
-genfstab -U /mnt >> /mnt/etc/fstab
+genfstab -U /mnt >>/mnt/etc/fstab
 
 # Base config
 # Set up locale
 cp /mnt/etc/locale.gen /mnt/etc/locale.gen.back
-echo 'en_US.UTF-8 UTF-8' >/mnt/etc/locale.gen
+echo $LOCALE >/mnt/etc/locale.gen
 echo 'es_ES.UTF-8 UTF-8' >>/mnt/etc/locale.gen
 locale-gen
 # Set up timezone, hostname and keymap
 systemd-firstboot --root /mnt \
-    --locale=${LOCALE} \
-    --keymap=${KEYMAP} \
-    --timezone=${TIME_ZONE} \
-    --hostname=${HOSTNAME}
+	--locale=${LOCALE} \
+	--keymap=${KEYMAP} \
+	--timezone=${TIME_ZONE} \
+	--hostname=${HOSTNAME}
 # Set up hosts file
 echo '127.0.0.1    localhost' >>/etc/hosts
 echo '::1          localhost' >>/etc/hosts
 echo "127.0.1.1    ${HOSTNAME} ${HOSTNAME}.localhost" >>/etc/hosts
-
 
 # Setting root password
 echo "*** Setting root password ***"
@@ -121,9 +120,9 @@ arch-chroot /mnt passwd $USERNAME
 # Update sudoers
 cp /etc/sudoers /etc/sudoers.back
 if [[ $SUDO_WITH_PASSWORD == 0 ]]; then
-  echo '%wheel ALL=(ALL) NOPASSWD: ALL' >>/mnt/etc/sudoers
+	echo '%wheel ALL=(ALL) NOPASSWD: ALL' >>/mnt/etc/sudoers
 else
-  echo '%wheel ALL=(ALL) ALL: ALL' >>/mnt/etc/sudoers
+	echo '%wheel ALL=(ALL) ALL: ALL' >>/mnt/etc/sudoers
 fi
 
 # Configure initramfs
@@ -161,4 +160,3 @@ sync
 # Cleaning
 swapoff /mnt/swap/swapfile
 umount -R /mnt
-

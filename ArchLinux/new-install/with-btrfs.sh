@@ -23,17 +23,17 @@ SUDO_WITH_PASSWORD=0
 # ----------------------------------------------------------------------------#
 
 if [[ $MAKE_PARTITIONS == 1 ]]; then
-    # Remove all partitions on drive
-    parted $DISK_DEVICE mklabel gpt
+	# Remove all partitions on drive
+	parted $DISK_DEVICE mklabel gpt
 
-    # Create boot and root partitions
-    parted $DISK_DEVICE mkpart boot fat32 1MiB $BOOT_SIZE
-    parted $DISK_DEVICE set 1 esp on
-    parted $DISK_DEVICE mkpart root btrfs $BOOT_SIZE 100%
+	# Create boot and root partitions
+	parted $DISK_DEVICE mkpart boot fat32 1MiB $BOOT_SIZE
+	parted $DISK_DEVICE set 1 esp on
+	parted $DISK_DEVICE mkpart root btrfs $BOOT_SIZE 100%
 
-    # Format partitions
-    mkfs.vfat -F 32 -n EFI $BOOT_PARTITION
-    mkfs.btrfs -f -L $ROOT_PART_NAME $ROOT_PARTITION
+	# Format partitions
+	mkfs.vfat -F 32 -n EFI $BOOT_PARTITION
+	mkfs.btrfs -f -L $ROOT_PART_NAME $ROOT_PARTITION
 fi
 
 # Mount Partitions
@@ -68,11 +68,11 @@ timedatectl set-ntp true
 # Installing base system
 pacman -S archlinux-keyring --noconfirm
 pacstrap /mnt \
-    base \
-    linux-zen linux-firmware linux-headers dkms $UCODE_TYPE \
-    btrfs-progs grub grub-btrfs efibootmgr \
-    networkmanager avahi bluez bluez-utils \
-    sudo git neovim
+	base \
+	linux-zen linux-firmware linux-headers dkms $UCODE_TYPE \
+	btrfs-progs grub grub-btrfs efibootmgr \
+	networkmanager avahi bluez bluez-utils \
+	sudo git neovim reflector
 
 # Create Swapfile
 arch-chroot /mnt btrfs filesystem mkswapfile --size ${SWAP_SIZE_GB}g --uuid clear /swap/swapfile
@@ -81,7 +81,7 @@ mkswap /mnt/swap/swapfile
 swapon /mnt/swap/swapfile
 
 # Generate fstabs
-genfstab -U /mnt >> /mnt/etc/fstab
+genfstab -U /mnt >>/mnt/etc/fstab
 
 # Base config
 # Set up locale
@@ -91,10 +91,10 @@ echo 'es_ES.UTF-8 UTF-8' >>/mnt/etc/locale.gen
 locale-gen
 # Set up timezone, hostname and keymap
 systemd-firstboot --root /mnt \
-    --locale=${LOCALE} \
-    --keymap=${KEYMAP} \
-    --timezone=${TIME_ZONE} \
-    --hostname=${HOSTNAME}
+	--locale=${LOCALE} \
+	--keymap=${KEYMAP} \
+	--timezone=${TIME_ZONE} \
+	--hostname=${HOSTNAME}
 # Set up hosts file
 echo '127.0.0.1    localhost' >>/etc/hosts
 echo '::1          localhost' >>/etc/hosts
@@ -112,9 +112,9 @@ arch-chroot /mnt passwd $USERNAME
 # Update sudoers
 cp /etc/sudoers /etc/sudoers.back
 if [[ $SUDO_WITH_PASSWORD == 0 ]]; then
-  echo '%wheel ALL=(ALL) NOPASSWD: ALL' >>/mnt/etc/sudoers
+	echo '%wheel ALL=(ALL) NOPASSWD: ALL' >>/mnt/etc/sudoers
 else
-  echo '%wheel ALL=(ALL) ALL: ALL' >>/mnt/etc/sudoers
+	echo '%wheel ALL=(ALL) ALL: ALL' >>/mnt/etc/sudoers
 fi
 
 # Configure initramfs
