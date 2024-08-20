@@ -10,6 +10,13 @@ sudo dnf -y install \
 go install github.com/rinchsan/gosimports/cmd/gosimports@latest
 go install github.com/fatih/gomodifytags@latest
 go install github.com/a-h/templ/cmd/templ@latest
+go install github.com/bufbuild/buf-language-server/cmd/bufls@latest
+
+# Rust Specific ----------------------------------------------------------------
+export CARGO_HOME=$HOME/.local/share/cargo
+sudo dnf -y install \
+	rust \
+	cargo
 
 # PHP Specific -----------------------------------------------------------------
 sudo dnf -y install \
