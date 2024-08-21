@@ -89,7 +89,7 @@ sudo dnf -y install \
 	neovim
 
 if [ ! -d "$HOME"/Projects/Personal/nvim-conf ]; then
-	git clone https://gitlab.com/xapitan/nvim-conf.git "$HOME"/Projects/Personal/nvim-conf
+	git clone https://github.com/polivera/nvim-conf.git "$HOME"/Projects/Personal/nvim-conf
 	ln -s "$HOME"/Projects/Personal/nvim-conf "$HOME"/.config/nvim
 	npm install -g neovim
 fi
