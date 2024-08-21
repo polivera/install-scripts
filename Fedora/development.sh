@@ -65,6 +65,10 @@ if ! command -v stylua 2>/dev/null; then
 	rm stylua-linux.zip
 fi
 
+# C / C++ Specific -------------------------------------------------------------
+sudo dnf -y install \
+	clang-tools-extra
+
 # Docker -----------------------------------------------------------------------
 sudo dnf -y install \
 	docker
