@@ -70,8 +70,14 @@ sudo dnf -y install \
 	clang-tools-extra
 
 # Docker -----------------------------------------------------------------------
+sudo dnf -y install dnf-plugins-core
+sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
 sudo dnf -y install \
-	docker
+	docker-ce \
+	docker-ce-cli \
+	containerd.io \
+	docker-buildx-plugin \
+	docker-compose-plugin
 
 sudo usermod -aG docker pablo
 
