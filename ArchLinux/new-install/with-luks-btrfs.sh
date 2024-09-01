@@ -75,12 +75,13 @@ timedatectl set-ntp true
 
 # Installing base system
 pacman -S archlinux-keyring --noconfirm
-pacstrap /mnt \
+pacstrap -k /mnt \
 	base \
-	linux-zen linux-firmware linux-headers dkms $UCODE_TYPE \
-	btrfs-progs grub grub-btrfs efibootmgr cryptsetup \
+	linux linux-firmware linux-headers dkms $UCODE_TYPE \
+	btrfs-progs cryptsetup \
 	networkmanager avahi bluez bluez-utils \
 	sudo git neovim reflector
+# grub grub-btrfs efibootmgr \
 
 # Create Swapfile
 arch-chroot /mnt btrfs filesystem mkswapfile --size ${SWAP_SIZE_GB}g --uuid clear /swap/swapfile
@@ -104,9 +105,11 @@ systemd-firstboot --root /mnt \
 	--timezone=${TIME_ZONE} \
 	--hostname=${HOSTNAME}
 # Set up hosts file
-echo '127.0.0.1    localhost' >>/etc/hosts
-echo '::1          localhost' >>/etc/hosts
-echo "127.0.1.1    ${HOSTNAME} ${HOSTNAME}.localhost" >>/etc/hosts
+{
+	echo '127.0.0.1    localhost'
+	echo '::1          localhost'
+	echo "127.0.1.1    ${HOSTNAME} ${HOSTNAME}.localhost"
+} >>/etc/hosts
 
 # Setting root password
 echo "*** Setting root password ***"
@@ -127,21 +130,49 @@ fi
 
 # Configure initramfs
 cp /mnt/etc/mkinitcpio.conf /mnt/etc/mkinitcpio.conf.back
-echo "MODULES=(btrfs)" >/mnt/etc/mkinitcpio.conf
-echo "BINARIES=()" >>/mnt/etc/mkinitcpio.conf
-echo "FILES=()" >>/mnt/etc/mkinitcpio.conf
-echo "HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck)" >>/mnt/etc/mkinitcpio.conf
+echo "" >/mnt/etc/mkinitcpio.conf
+{
+	echo "MODULES=(btrfs)"
+	echo "BINARIES=()"
+	echo "FILES=()"
+	echo "HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck)"
+} >>/mnt/etc/mkinitcpio.conf
 
 # Run mkinitcpio
 arch-chroot /mnt mkinitcpio -P
 
 # Install bootloader
-arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=$BOOT_DIRECTORY --bootloader-id=GRUB
+# arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=$BOOT_DIRECTORY --bootloader-id=GRUB
+# ROOT_PART_UUID=$(blkid | grep ${ORIGINAL_ROOT_PARTITION} | awk '{print $2}' | sed 's/UUID="\([^"]*\)"/\1/')
+# LUKS_MAPPER_ESC=$(echo $LUKS_MAPPER | sed 's/\//\\\//g')
+# sed -i "s/CMDLINE_LINUX=\"/\0rd.luks.name=$ROOT_PART_UUID=$LUKS_NAME" /mnt/etc/default/grub
+# sed -i "s/#GRUB_ENABLE_CRY/GRUB_ENABLE_CRY/" /mnt/etc/default/grub
+# arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 ROOT_PART_UUID=$(blkid | grep ${ORIGINAL_ROOT_PARTITION} | awk '{print $2}' | sed 's/UUID="\([^"]*\)"/\1/')
-LUKS_MAPPER_ESC=$(echo $LUKS_MAPPER | sed 's/\//\\\//g')
-sed -i "s/CMDLINE_LINUX=\"/\0rd.luks.name=$ROOT_PART_UUID=$LUKS_NAME" /mnt/etc/default/grub
-sed -i "s/#GRUB_ENABLE_CRY/GRUB_ENABLE_CRY/" /mnt/etc/default/grub
-arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+arch-chroot /mnt bootctl install --esp-path=/boot
+cp /mnt/${BOOT_DIRECTORY}/loader/loader.conf /mnt/${BOOT_DIRECTORY}/loader/loader.conf.back
+{
+	echo "default  arch.conf"
+	echo "timeout  4"
+	echo "console-mode max"
+	echo "editor   no"
+} >/mnt/${BOOT_DIRECTORY}/loader/loader.conf
+
+# Adding kernel image
+{
+	echo "title   Arch Linux"
+	echo "linux   /vmlinuz-linux"
+	echo "initrd  /initramfs-linux.img"
+	echo "options cryptdevice=UUID=${ROOT_PART_UUID}:root root=${LUKS_MAPPER} rw quiet splash"
+} >/mnt/${BOOT_DIRECTORY}/loader/entries/arch.conf
+
+# Adding kernel fallback image
+{
+	echo "Arch Linux (fallback initramfs)"
+	echo "linux   /vmlinuz-linux"
+	echo "initrd  /initramfs-linux-fallback.img"
+	echo "options cryptdevice=UUID=${ROOT_PART_UUID}:root root=${LUKS_MAPPER} rw quiet splash"
+} >/mnt/${BOOT_DIRECTORY}/loader/entries/arch-fallback.conf
 
 # Edit pacman.conf
 cp /mnt/etc/pacman.conf /mnt/etc/pacman.conf.back
