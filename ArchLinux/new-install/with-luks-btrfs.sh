@@ -11,12 +11,10 @@ DISK_DEVICE=/dev/nvme0n1
 BOOT_SIZE=1025MiB
 BOOT_PARTITION="${DISK_DEVICE}p1"
 ROOT_PARTITION="${DISK_DEVICE}p2"
-ORIGINAL_ROOT_PARTITION="${ROOT_PARTITION}"
 BTRFS_MOUNT_OPTIONS="noatime,compress=zstd,discard=async"
 BOOT_DIRECTORY=/boot
 SWAP_SIZE_GB=16
 LUKS_NAME=linuxroot
-LUKS_MAPPER="/dev/mapper/${LUKS_NAME}"
 ## Custom Vars
 USERNAME="pablo"
 TIME_ZONE="Europe/Madrid"
@@ -26,6 +24,8 @@ HOSTNAME="otrave"
 SUDO_WITH_PASSWORD=0
 
 # ----------------------------------------------------------------------------#
+ORIGINAL_ROOT_PARTITION="${ROOT_PARTITION}"
+LUKS_MAPPER="/dev/mapper/${LUKS_NAME}"
 
 # Remove all partitions on drive
 parted $DISK_DEVICE mklabel gpt
@@ -75,7 +75,7 @@ timedatectl set-ntp true
 
 # Installing base system
 pacman -S archlinux-keyring --noconfirm
-pacstrap -k /mnt \
+pacstrap /mnt \
 	base \
 	linux linux-firmware linux-headers dkms $UCODE_TYPE \
 	btrfs-progs cryptsetup \
@@ -186,8 +186,8 @@ systemctl --root /mnt enable systemd-resolved systemd-timesyncd NetworkManager b
 systemctl --root /mnt mask systemd-networkd
 
 # Sync cache change to persistent storage
-sync
+#sync
 
 # Cleaning
-swapoff /mnt/swap/swapfile
-umount -R /mnt
+#swapoff /mnt/swap/swapfile
+#umount -R /mnt
