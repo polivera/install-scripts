@@ -46,7 +46,7 @@ mkfs.btrfs -f -L $LUKS_NAME $ROOT_PARTITION
 
 # Mount Partitions
 mount $ROOT_PARTITION /mnt
-btrfs subvolume create /mnt/@root
+btrfs subvolume create /mnt/@
 btrfs subvolume create /mnt/@home
 btrfs subvolume create /mnt/@var
 btrfs subvolume create /mnt/@srv
@@ -56,7 +56,7 @@ btrfs subvolume create /mnt/@swap
 btrfs subvolume create /mnt/@.snapshots
 umount -R /mnt
 # Mount new volumes
-mount -t btrfs -o $BTRFS_MOUNT_OPTIONS,subvol=@root $ROOT_PARTITION /mnt
+mount -t btrfs -o $BTRFS_MOUNT_OPTIONS,subvol=@ $ROOT_PARTITION /mnt
 mkdir -p /mnt/{boot,home,var,srv,opt,tmp,swap,.snapshots,$BOOT_DIRECTORY}
 mount -t btrfs -o $BTRFS_MOUNT_OPTIONS,subvol=@home $ROOT_PARTITION /mnt/home
 mount -t btrfs -o $BTRFS_MOUNT_OPTIONS,subvol=@srv $ROOT_PARTITION /mnt/srv
@@ -66,9 +66,6 @@ mount -t btrfs -o $BTRFS_MOUNT_OPTIONS,subvol=@.snapshots $ROOT_PARTITION /mnt/.
 mount -t btrfs -o nodatacow,subvol=@var $ROOT_PARTITION /mnt/var
 mount -t btrfs -o nodatacow,subvol=@swap $ROOT_PARTITION /mnt/swap
 mount $BOOT_PARTITION /mnt/$BOOT_DIRECTORY
-
-# Update mirror list
-reflector --country ES --age 24 --protocol http,https --sort rate --save /etc/pacman.d/mirrorlist
 
 # Set time
 timedatectl set-ntp true
@@ -80,7 +77,7 @@ pacstrap /mnt \
 	linux linux-firmware linux-headers dkms $UCODE_TYPE \
 	btrfs-progs cryptsetup \
 	networkmanager avahi bluez bluez-utils \
-	sudo git neovim reflector
+	sudo git neovim
 # grub grub-btrfs efibootmgr \
 
 # Create Swapfile
@@ -142,12 +139,6 @@ echo "" >/mnt/etc/mkinitcpio.conf
 arch-chroot /mnt mkinitcpio -P
 
 # Install bootloader
-# arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=$BOOT_DIRECTORY --bootloader-id=GRUB
-# ROOT_PART_UUID=$(blkid | grep ${ORIGINAL_ROOT_PARTITION} | awk '{print $2}' | sed 's/UUID="\([^"]*\)"/\1/')
-# LUKS_MAPPER_ESC=$(echo $LUKS_MAPPER | sed 's/\//\\\//g')
-# sed -i "s/CMDLINE_LINUX=\"/\0rd.luks.name=$ROOT_PART_UUID=$LUKS_NAME" /mnt/etc/default/grub
-# sed -i "s/#GRUB_ENABLE_CRY/GRUB_ENABLE_CRY/" /mnt/etc/default/grub
-# arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 ROOT_PART_UUID=$(blkid | grep ${ORIGINAL_ROOT_PARTITION} | awk '{print $2}' | sed 's/UUID="\([^"]*\)"/\1/')
 arch-chroot /mnt bootctl install --esp-path=/boot
 cp /mnt/${BOOT_DIRECTORY}/loader/loader.conf /mnt/${BOOT_DIRECTORY}/loader/loader.conf.back
@@ -162,16 +153,18 @@ cp /mnt/${BOOT_DIRECTORY}/loader/loader.conf /mnt/${BOOT_DIRECTORY}/loader/loade
 {
 	echo "title   Arch Linux"
 	echo "linux   /vmlinuz-linux"
+	echo "initrd  /amd-ucode.img"
 	echo "initrd  /initramfs-linux.img"
-	echo "options cryptdevice=UUID=${ROOT_PART_UUID}:root root=${LUKS_MAPPER} rw quiet splash"
+	echo "options rs.luks.name=${ROOT_PART_UUID}=${LUKS_NAME} root=${LUKS_MAPPER} rootflags=subvol=@ rw quiet splash"
 } >/mnt/${BOOT_DIRECTORY}/loader/entries/arch.conf
 
 # Adding kernel fallback image
 {
 	echo "Arch Linux (fallback initramfs)"
 	echo "linux   /vmlinuz-linux"
+	echo "initrd  /amd-ucode.img"
 	echo "initrd  /initramfs-linux-fallback.img"
-	echo "options cryptdevice=UUID=${ROOT_PART_UUID}:root root=${LUKS_MAPPER} rw quiet splash"
+	echo "options rs.luks.name=${ROOT_PART_UUID}=${LUKS_NAME} root=${LUKS_MAPPER} rootflags=subvol=@ rw quiet splash"
 } >/mnt/${BOOT_DIRECTORY}/loader/entries/arch-fallback.conf
 
 # Edit pacman.conf
@@ -186,8 +179,8 @@ systemctl --root /mnt enable systemd-resolved systemd-timesyncd NetworkManager b
 systemctl --root /mnt mask systemd-networkd
 
 # Sync cache change to persistent storage
-#sync
+sync
 
 # Cleaning
-#swapoff /mnt/swap/swapfile
-#umount -R /mnt
+swapoff /mnt/swap/swapfile
+umount -R /mnt
