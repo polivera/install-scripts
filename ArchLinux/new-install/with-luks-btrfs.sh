@@ -75,6 +75,7 @@ pacman -S archlinux-keyring --noconfirm
 pacstrap /mnt \
 	base \
 	linux linux-firmware linux-headers dkms $UCODE_TYPE \
+	mesa \
 	btrfs-progs cryptsetup terminus-font plymouth \
 	networkmanager avahi bluez bluez-utils \
 	sudo git neovim
@@ -143,7 +144,7 @@ arch-chroot /mnt bootctl install --esp-path=/boot
 cp /mnt/${BOOT_DIRECTORY}/loader/loader.conf /mnt/${BOOT_DIRECTORY}/loader/loader.conf.back
 {
 	echo "default  arch.conf"
-	echo "timeout  4"
+	echo "timeout  1"
 	echo "console-mode max"
 	echo "editor   no"
 } >/mnt/${BOOT_DIRECTORY}/loader/loader.conf

@@ -5,6 +5,7 @@ USER=pablo
 source ./aur-yay.sh
 
 # Go Specific ------------------------------------------------------------------
+export GOPATH=$HOME/.local/share/go
 sudo pacman -S \
 	go \
 	gopls \
@@ -14,6 +15,13 @@ sudo pacman -S \
 go install github.com/rinchsan/gosimports/cmd/gosimports@latest
 go install github.com/fatih/gomodifytags@latest
 go install github.com/a-h/templ/cmd/templ@latest
+go install github.com/bufbuild/buf-language-server/cmd/bufls@latest
+
+# Rust Specific ----------------------------------------------------------------
+export CARGO_HOME=$HOME/.local/share/cargo
+sudo dnf -y install \
+	rust \
+	cargo
 
 # PHP Specific -----------------------------------------------------------------
 sudo pacman -S \
@@ -26,6 +34,13 @@ yay -S \
 	php-cs-fixer \
 	phpactor \
 	--needed --noconfirm
+
+if command -v phpactor; then
+	curl -Lo phpactor.phar https://github.com/phpactor/phpactor/releases/latest/download/phpactor.phar
+	chmod a+x phpactor.phar
+	mkdir ~/.local/bin 2>/dev/null
+	mv phpactor.phar ~/.local/bin/phpactor
+fi
 
 # Shell Specific ---------------------------------------------------------------
 sudo pacman -S \
@@ -60,6 +75,10 @@ sudo pacman -S \
 	docker \
 	--needed --noconfirm
 sudo usermod -aG docker $USER
+
+# C / C++ Specific -------------------------------------------------------------
+sudo dnf -y install \
+	clang-tools-extra
 
 # Misc Tools -------------------------------------------------------------------
 sudo pacman -S \
