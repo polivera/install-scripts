@@ -75,10 +75,9 @@ pacman -S archlinux-keyring --noconfirm
 pacstrap /mnt \
 	base \
 	linux linux-firmware linux-headers dkms $UCODE_TYPE \
-	btrfs-progs cryptsetup \
+	btrfs-progs cryptsetup terminus-font plymouth \
 	networkmanager avahi bluez bluez-utils \
 	sudo git neovim
-# grub grub-btrfs efibootmgr \
 
 # Create Swapfile
 arch-chroot /mnt btrfs filesystem mkswapfile --size ${SWAP_SIZE_GB}g --uuid clear /swap/swapfile
@@ -129,10 +128,10 @@ fi
 cp /mnt/etc/mkinitcpio.conf /mnt/etc/mkinitcpio.conf.back
 echo "" >/mnt/etc/mkinitcpio.conf
 {
-	echo "MODULES=(btrfs)"
+	echo "MODULES=(amdgpu btrfs)"
 	echo "BINARIES=()"
 	echo "FILES=()"
-	echo "HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck)"
+	echo "HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck plymouth)"
 } >>/mnt/etc/mkinitcpio.conf
 
 # Run mkinitcpio
@@ -155,16 +154,16 @@ cp /mnt/${BOOT_DIRECTORY}/loader/loader.conf /mnt/${BOOT_DIRECTORY}/loader/loade
 	echo "linux   /vmlinuz-linux"
 	echo "initrd  /amd-ucode.img"
 	echo "initrd  /initramfs-linux.img"
-	echo "options rs.luks.name=${ROOT_PART_UUID}=${LUKS_NAME} root=${LUKS_MAPPER} rootflags=subvol=@ rw quiet splash"
+	echo "options rs.luks.name=${ROOT_PART_UUID}=${LUKS_NAME} root=${LUKS_MAPPER} rootflags=subvol=@ rw quiet splash amdgpu.dc=1 video=2560x1440@60"
 } >/mnt/${BOOT_DIRECTORY}/loader/entries/arch.conf
 
 # Adding kernel fallback image
 {
-	echo "Arch Linux (fallback initramfs)"
+	echo "title   Arch Linux (fallback initramfs)"
 	echo "linux   /vmlinuz-linux"
 	echo "initrd  /amd-ucode.img"
 	echo "initrd  /initramfs-linux-fallback.img"
-	echo "options rs.luks.name=${ROOT_PART_UUID}=${LUKS_NAME} root=${LUKS_MAPPER} rootflags=subvol=@ rw quiet splash"
+	echo "options rs.luks.name=${ROOT_PART_UUID}=${LUKS_NAME} root=${LUKS_MAPPER} rootflags=subvol=@ rw quiet splash amdgpu.dc=1 video=2560x1440@60"
 } >/mnt/${BOOT_DIRECTORY}/loader/entries/arch-fallback.conf
 
 # Edit pacman.conf
