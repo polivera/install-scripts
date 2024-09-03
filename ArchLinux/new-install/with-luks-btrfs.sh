@@ -128,10 +128,10 @@ fi
 cp /mnt/etc/mkinitcpio.conf /mnt/etc/mkinitcpio.conf.back
 echo "" >/mnt/etc/mkinitcpio.conf
 {
-	echo "MODULES=(btrfs)"
+	echo "MODULES=(amdgpu btrfs)"
 	echo "BINARIES=()"
 	echo "FILES=()"
-	echo "HOOKS=(base systemd autodetect microcode modconf kms keyboard plymouth sd-vconsole block sd-encrypt filesystems fsck)"
+	echo "HOOKS=(base udev autodetect microcode modconf kms keyboard keymap plymouth block encrypt filesystems fsck)"
 } >>/mnt/etc/mkinitcpio.conf
 
 # Run mkinitcpio
@@ -154,7 +154,7 @@ cp /mnt/${BOOT_DIRECTORY}/loader/loader.conf /mnt/${BOOT_DIRECTORY}/loader/loade
 	echo "linux   /vmlinuz-linux"
 	echo "initrd  /amd-ucode.img"
 	echo "initrd  /initramfs-linux.img"
-	echo "options rs.luks.name=${ROOT_PART_UUID}=${LUKS_NAME} root=${LUKS_MAPPER} rootflags=subvol=@ rw quiet splash"
+	echo "options cryptdevice=UUID=${ROOT_PART_UUID}:${LUKS_NAME} root=${LUKS_MAPPER} rootflags=subvol=@ rw quiet splash amdgpu.dc=1 video=2560x1440@60"
 } >/mnt/${BOOT_DIRECTORY}/loader/entries/arch.conf
 
 # Adding kernel fallback image
@@ -163,7 +163,7 @@ cp /mnt/${BOOT_DIRECTORY}/loader/loader.conf /mnt/${BOOT_DIRECTORY}/loader/loade
 	echo "linux   /vmlinuz-linux"
 	echo "initrd  /amd-ucode.img"
 	echo "initrd  /initramfs-linux-fallback.img"
-	echo "options rs.luks.name=${ROOT_PART_UUID}=${LUKS_NAME} root=${LUKS_MAPPER} rootflags=subvol=@ rw quiet splash"
+	echo "options cryptdevice=UUID=${ROOT_PART_UUID}:${LUKS_NAME} root=${LUKS_MAPPER} rootflags=subvol=@ rw quiet splash amdgpu.dc=1 video=2560x1440@60"
 } >/mnt/${BOOT_DIRECTORY}/loader/entries/arch-fallback.conf
 
 # Edit pacman.conf
