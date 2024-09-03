@@ -14,7 +14,7 @@ ROOT_PARTITION="${DISK_DEVICE}p2"
 BTRFS_MOUNT_OPTIONS="noatime,compress=zstd,discard=async"
 BOOT_DIRECTORY=/boot
 SWAP_SIZE_GB=16
-LUKS_NAME=linuxroot
+LUKS_NAME=root
 ## Custom Vars
 USERNAME="pablo"
 TIME_ZONE="Europe/Madrid"
@@ -75,7 +75,6 @@ pacman -S archlinux-keyring --noconfirm
 pacstrap /mnt \
 	base \
 	linux linux-firmware linux-headers dkms $UCODE_TYPE \
-	mesa \
 	btrfs-progs cryptsetup terminus-font plymouth \
 	networkmanager avahi bluez bluez-utils \
 	sudo git neovim
@@ -129,14 +128,14 @@ fi
 cp /mnt/etc/mkinitcpio.conf /mnt/etc/mkinitcpio.conf.back
 echo "" >/mnt/etc/mkinitcpio.conf
 {
-	echo "MODULES=(amdgpu btrfs)"
+	echo "MODULES=(btrfs)"
 	echo "BINARIES=()"
 	echo "FILES=()"
-	echo "HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems fsck plymouth)"
+	echo "HOOKS=(base systemd autodetect microcode modconf kms keyboard plymouth sd-vconsole block sd-encrypt filesystems fsck)"
 } >>/mnt/etc/mkinitcpio.conf
 
 # Run mkinitcpio
-arch-chroot /mnt mkinitcpio -P
+arch-chroot /mnt mkinitcpio -p linux
 
 # Install bootloader
 ROOT_PART_UUID=$(blkid | grep ${ORIGINAL_ROOT_PARTITION} | awk '{print $2}' | sed 's/UUID="\([^"]*\)"/\1/')
@@ -145,7 +144,7 @@ cp /mnt/${BOOT_DIRECTORY}/loader/loader.conf /mnt/${BOOT_DIRECTORY}/loader/loade
 {
 	echo "default  arch.conf"
 	echo "timeout  1"
-	echo "console-mode max"
+	echo "#console-mode max"
 	echo "editor   no"
 } >/mnt/${BOOT_DIRECTORY}/loader/loader.conf
 
@@ -155,7 +154,7 @@ cp /mnt/${BOOT_DIRECTORY}/loader/loader.conf /mnt/${BOOT_DIRECTORY}/loader/loade
 	echo "linux   /vmlinuz-linux"
 	echo "initrd  /amd-ucode.img"
 	echo "initrd  /initramfs-linux.img"
-	echo "options rs.luks.name=${ROOT_PART_UUID}=${LUKS_NAME} root=${LUKS_MAPPER} rootflags=subvol=@ rw quiet splash amdgpu.dc=1 video=2560x1440@60"
+	echo "options rs.luks.name=${ROOT_PART_UUID}=${LUKS_NAME} root=${LUKS_MAPPER} rootflags=subvol=@ rw quiet splash"
 } >/mnt/${BOOT_DIRECTORY}/loader/entries/arch.conf
 
 # Adding kernel fallback image
@@ -164,7 +163,7 @@ cp /mnt/${BOOT_DIRECTORY}/loader/loader.conf /mnt/${BOOT_DIRECTORY}/loader/loade
 	echo "linux   /vmlinuz-linux"
 	echo "initrd  /amd-ucode.img"
 	echo "initrd  /initramfs-linux-fallback.img"
-	echo "options rs.luks.name=${ROOT_PART_UUID}=${LUKS_NAME} root=${LUKS_MAPPER} rootflags=subvol=@ rw quiet splash amdgpu.dc=1 video=2560x1440@60"
+	echo "options rs.luks.name=${ROOT_PART_UUID}=${LUKS_NAME} root=${LUKS_MAPPER} rootflags=subvol=@ rw quiet splash"
 } >/mnt/${BOOT_DIRECTORY}/loader/entries/arch-fallback.conf
 
 # Edit pacman.conf
