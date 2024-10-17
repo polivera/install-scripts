@@ -35,13 +35,6 @@ yay -S \
 	phpactor \
 	--needed --noconfirm
 
-if command -v phpactor; then
-	curl -Lo phpactor.phar https://github.com/phpactor/phpactor/releases/latest/download/phpactor.phar
-	chmod a+x phpactor.phar
-	mkdir ~/.local/bin 2>/dev/null
-	mv phpactor.phar ~/.local/bin/phpactor
-fi
-
 # Shell Specific ---------------------------------------------------------------
 sudo pacman -S \
 	bash-language-server \
@@ -61,6 +54,11 @@ sudo pacman -S \
 	vscode-json-languageserver \
 	prettier \
 	--needed --noconfirm
+
+yay -S tailwindcss \
+	--needed --noconfirm
+
+npm config set prefix "$HOME"/.local/npm-global
 
 # Lua Specific -----------------------------------------------------------------
 sudo pacman -S \
@@ -86,6 +84,7 @@ sudo pacman -S \
 	mariadb-clients \
 	tree-sitter \
 	jq \
+	less \
 	--needed --noconfirm
 
 yay -S \
@@ -93,13 +92,26 @@ yay -S \
 	sql-language-server \
 	--needed --noconfirm
 
+# Autoenv
+npm install -g '@hyperupcall/autoenv'
+
 # Neovim -----------------------------------------------------------------------
 sudo pacman -S \
-	neovim \
-	--needed --noconfirm
+     neovim \
+     --needed --noconfirm
 
 if [ ! -d "$HOME"/Projects/Personal/nvim-conf ]; then
-	git clone https://gitlab.com/xapitan/nvim-conf.git "$HOME"/Projects/Personal/nvim-conf
+	git clone https://github.com/polivera/nvim-conf.git "$HOME"/Projects/Personal/nvim-conf
 	ln -s "$HOME"/Projects/Personal/nvim-conf "$HOME"/.config/nvim
 	npm install -g neovim
+fi
+
+# Emacs -----------------------------------------------------------------------
+sudo pacman -S \
+     emacs-wayland \
+     --needed --noconfirm
+
+if [ ! -d "$HOME"/Projects/Personal/emacs-conf ]; then
+	git clone https://github.com/polivera/emacs-conf.git "$HOME"/Projects/Personal/emacs-conf
+	ln -s "$HOME"/Projects/Personal/emacs-conf "$HOME"/.config/emacs
 fi

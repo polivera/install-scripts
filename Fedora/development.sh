@@ -11,12 +11,15 @@ go install github.com/rinchsan/gosimports/cmd/gosimports@latest
 go install github.com/fatih/gomodifytags@latest
 go install github.com/a-h/templ/cmd/templ@latest
 go install github.com/bufbuild/buf-language-server/cmd/bufls@latest
+go install honnef.co/go/tools/cmd/staticcheck@latest
 
 # Rust Specific ----------------------------------------------------------------
 export CARGO_HOME=$HOME/.local/share/cargo
 sudo dnf -y install \
 	rust \
 	cargo
+
+cargo install htmx-lsp
 
 # PHP Specific -----------------------------------------------------------------
 sudo dnf -y install \
@@ -27,7 +30,7 @@ sudo dnf -y install \
 	php-pecl-xdebug3 \
 	php-cs-fixer
 
-if command -v phpactor; then
+if ! command -v phpactor; then
 	curl -Lo phpactor.phar https://github.com/phpactor/phpactor/releases/latest/download/phpactor.phar
 	chmod a+x phpactor.phar
 	mkdir ~/.local/bin 2>/dev/null
@@ -67,19 +70,25 @@ fi
 
 # C / C++ Specific -------------------------------------------------------------
 sudo dnf -y install \
+	clang \
 	clang-tools-extra
 
 # Docker -----------------------------------------------------------------------
-sudo dnf -y install dnf-plugins-core
-sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
-sudo dnf -y install \
-	docker-ce \
-	docker-ce-cli \
-	containerd.io \
-	docker-buildx-plugin \
-	docker-compose-plugin
+# sudo dnf -y install dnf-plugins-core
+# sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+# sudo dnf -y install \
+# 	docker-ce \
+# 	docker-ce-cli \
+# 	containerd.io \
+# 	docker-buildx-plugin \
+# 	docker-compose-plugin
+#
+# sudo usermod -aG docker pablo
 
-sudo usermod -aG docker pablo
+# sudo dnf -y install \
+#     podman \
+#     podman-compose \
+#     podman-docker
 
 # Misc Tools -------------------------------------------------------------------
 sudo dnf -y install \

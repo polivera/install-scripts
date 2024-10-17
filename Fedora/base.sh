@@ -37,3 +37,10 @@ sudo dnf -y install \
 	nodejs-npm
 
 npm config set prefix "$HOME"/.local/npm-global
+
+# File System
+sudo dnf -y install \
+	nfs-utils \
+	btrfs-assistant \
+	snapper \
+	dnf-plugin-snapper

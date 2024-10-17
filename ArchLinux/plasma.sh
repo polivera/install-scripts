@@ -18,15 +18,19 @@ sudo pacman -S \
 	cronie \
 	phonon-qt5-gstreamer \
 	ffmpeg \
-	timeshift \
+	alacritty \
+	firefox \
+	spotify-launcher \
+	power-profiles-daemon \
 	--needed --noconfirm
 
 sudo pacman -R kmix --noconfirm
 
 yay -S \
 	1password \
-	spotify \
-	brave \
+	brave-bin \
+	seafile-client \
+	ttf-iosevkaterm-nerd \
 	--needed --noconfirm
 
 sudo systemctl enable sddm

@@ -2,6 +2,9 @@
 
 source ./aur-yay.sh
 
+# Update repos
+sudo pacman -Syu
+
 # Install pacman
 sudo pacman -S \
 	archlinux-keyring \

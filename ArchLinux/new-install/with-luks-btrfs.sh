@@ -18,7 +18,7 @@ LUKS_NAME=root
 ## Custom Vars
 USERNAME="pablo"
 TIME_ZONE="Europe/Madrid"
-LOCALE="en_US.UTF-8"
+LOCALE="en_US.UTF-8 UTF-8"
 KEYMAP="us"
 HOSTNAME="otrave"
 SUDO_WITH_PASSWORD=0
@@ -93,19 +93,20 @@ genfstab -U /mnt >>/mnt/etc/fstab
 cp /mnt/etc/locale.gen /mnt/etc/locale.gen.back
 echo $LOCALE >/mnt/etc/locale.gen
 echo 'es_ES.UTF-8 UTF-8' >>/mnt/etc/locale.gen
-locale-gen
+arch-chroot /mnt locale-gen
 # Set up timezone, hostname and keymap
 systemd-firstboot --root /mnt \
 	--locale=${LOCALE} \
 	--keymap=${KEYMAP} \
 	--timezone=${TIME_ZONE} \
 	--hostname=${HOSTNAME}
+
 # Set up hosts file
 {
 	echo '127.0.0.1    localhost'
 	echo '::1          localhost'
 	echo "127.0.1.1    ${HOSTNAME} ${HOSTNAME}.localhost"
-} >>/etc/hosts
+} >>/mnt/etc/hosts
 
 # Setting root password
 echo "*** Setting root password ***"
