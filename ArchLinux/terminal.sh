@@ -32,5 +32,5 @@ git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
 # Change default shell to zsh
 chsh -s /usr/bin/zsh
 
-# We have to log in againt to finish the installation
+# We have to log in against to finish the installation
 exit

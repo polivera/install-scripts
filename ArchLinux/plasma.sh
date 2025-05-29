@@ -28,8 +28,6 @@ sudo pacman -R kmix --noconfirm
 
 yay -S \
 	1password \
-	brave-bin \
-	seafile-client \
 	ttf-iosevkaterm-nerd \
 	--needed --noconfirm
 

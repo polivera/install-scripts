@@ -52,7 +52,7 @@ sudo pacman -S \
 # Filesystems
 sudo pacman -S \
 	ntfs-3g \
-	exfat-utils \
+	exfatprogs \
 	--needed --noconfirm
 
 # Misc
@@ -67,4 +67,4 @@ sudo pacman -S \
 yay -S mkinitcpio-firmware --needed --noconfirm
 
 echo "'drivers' installed"
-return 0
+exit 0

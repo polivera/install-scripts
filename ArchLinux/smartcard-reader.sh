@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-# Install smartcard readeer
+source ./aur-yay.sh
 
+# Install smartcard reader
 sudo pacman -S \
     ccid \
     opensc \

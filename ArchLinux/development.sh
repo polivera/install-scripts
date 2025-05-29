@@ -13,26 +13,12 @@ sudo pacman -S \
 	--needed --noconfirm
 
 go install github.com/rinchsan/gosimports/cmd/gosimports@latest
-go install github.com/fatih/gomodifytags@latest
-go install github.com/a-h/templ/cmd/templ@latest
-go install github.com/bufbuild/buf-language-server/cmd/bufls@latest
 
 # Rust Specific ----------------------------------------------------------------
 export CARGO_HOME=$HOME/.local/share/cargo
-sudo dnf -y install \
-	rust \
-	cargo
-
-# PHP Specific -----------------------------------------------------------------
 sudo pacman -S \
-	php \
-	composer \
-	xdebug \
-	--needed --noconfirm
-
-yay -S \
-	php-cs-fixer \
-	phpactor \
+	rust \
+	cargo \
 	--needed --noconfirm
 
 # Shell Specific ---------------------------------------------------------------
