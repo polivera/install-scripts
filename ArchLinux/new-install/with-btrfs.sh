@@ -119,6 +119,7 @@ arch-chroot /mnt passwd
 # Create new user and set its password
 echo "*** Setting ${USERNAME} user and password ***"
 arch-chroot /mnt useradd -m $USERNAME -G wheel
+arch-chroot /mnt chown $USERNAME:$USERNAME /home/$USERNAME/Games
 arch-chroot /mnt passwd $USERNAME
 
 # Update sudoers
@@ -126,7 +127,7 @@ cp /mnt/etc/sudoers /mnt/etc/sudoers.back
 if [[ $SUDO_WITH_PASSWORD == 0 ]]; then
 	echo '%wheel ALL=(ALL) NOPASSWD: ALL' >>/mnt/etc/sudoers
 else
-	echo '%wheel ALL=(ALL) ALL: ALL' >>/mnt/etc/sudoers
+	echo '%wheel ALL=(ALL) ALL' >>/mnt/etc/sudoers
 fi
 
 # Configure initramfs
