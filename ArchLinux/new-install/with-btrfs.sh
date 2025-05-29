@@ -9,6 +9,7 @@ BOOT_SIZE=1025MiB
 BOOT_PARTITION="${DISK_DEVICE}p1"
 ROOT_PARTITION="${DISK_DEVICE}p2"
 BTRFS_MOUNT_OPTIONS="noatime,compress=zstd,discard=async"
+UNPROTECT_BTRFS_MOUNT_OPTIONS="nodatacow,noatime,discard=async"
 BOOT_DIRECTORY=/boot
 SWAP_SIZE_GB=16
 ROOT_PART_NAME=linuxroot
@@ -23,6 +24,11 @@ SUDO_WITH_PASSWORD=0
 # ----------------------------------------------------------------------------#
 
 if [[ $MAKE_PARTITIONS == 1 ]]; then
+  # Add confirmation prompt for destructive operation
+  echo "WARNING: This will destroy all data on $DISK_DEVICE"
+  read -p "Continue? (y/N): " -n 1 -r
+  [[ $REPLY =~ ^[Yy]$ ]] || exit 1
+
 	# Remove all partitions on drive
 	parted $DISK_DEVICE mklabel gpt
 
@@ -40,6 +46,7 @@ fi
 mount $ROOT_PARTITION /mnt
 btrfs subvolume create /mnt/@root
 btrfs subvolume create /mnt/@home
+btrfs subvolume create /mnt/@games
 btrfs subvolume create /mnt/@var
 btrfs subvolume create /mnt/@srv
 btrfs subvolume create /mnt/@opt
@@ -53,10 +60,15 @@ mkdir -p /mnt/{boot,home,var,srv,opt,tmp,swap,.snapshots,$BOOT_DIRECTORY}
 mount -t btrfs -o $BTRFS_MOUNT_OPTIONS,subvol=@home $ROOT_PARTITION /mnt/home
 mount -t btrfs -o $BTRFS_MOUNT_OPTIONS,subvol=@srv $ROOT_PARTITION /mnt/srv
 mount -t btrfs -o $BTRFS_MOUNT_OPTIONS,subvol=@opt $ROOT_PARTITION /mnt/opt
-mount -t btrfs -o $BTRFS_MOUNT_OPTIONS,subvol=@tmp $ROOT_PARTITION /mnt/tmp
+mount -t btrfs -o $UNPROTECT_BTRFS_MOUNT_OPTIONS,subvol=@tmp $ROOT_PARTITION /mnt/tmp
 mount -t btrfs -o $BTRFS_MOUNT_OPTIONS,subvol=@.snapshots $ROOT_PARTITION /mnt/.snapshots
-mount -t btrfs -o nodatacow,subvol=@var $ROOT_PARTITION /mnt/var
-mount -t btrfs -o nodatacow,subvol=@swap $ROOT_PARTITION /mnt/swap
+mount -t btrfs -o $UNPROTECT_BTRFS_MOUNT_OPTIONS,subvol=@var $ROOT_PARTITION /mnt/var
+mount -t btrfs -o $UNPROTECT_BTRFS_MOUNT_OPTIONS,subvol=@swap $ROOT_PARTITION /mnt/swap
+
+# Home Specific Partitions
+mkdir -p /mnt/home/$USERNAME/Games
+mount -t btrfs -o $UNPROTECT_BTRFS_MOUNT_OPTIONS,subvol=@games $ROOT_PARTITION /mnt/home/$USERNAME/Games
+
 mount $BOOT_PARTITION /mnt/$BOOT_DIRECTORY
 
 # Update mirror list
@@ -88,7 +100,7 @@ genfstab -U /mnt >>/mnt/etc/fstab
 cp /mnt/etc/locale.gen /mnt/etc/locale.gen.back
 echo 'en_US.UTF-8 UTF-8' >/mnt/etc/locale.gen
 echo 'es_ES.UTF-8 UTF-8' >>/mnt/etc/locale.gen
-locale-gen
+arch-chroot /mnt locale-gen
 # Set up timezone, hostname and keymap
 systemd-firstboot --root /mnt \
 	--locale=${LOCALE} \
@@ -96,9 +108,9 @@ systemd-firstboot --root /mnt \
 	--timezone=${TIME_ZONE} \
 	--hostname=${HOSTNAME}
 # Set up hosts file
-echo '127.0.0.1    localhost' >>/etc/hosts
-echo '::1          localhost' >>/etc/hosts
-echo "127.0.1.1    ${HOSTNAME} ${HOSTNAME}.localhost" >>/etc/hosts
+echo '127.0.0.1    localhost' >>/mnt/etc/hosts
+echo '::1          localhost' >>/mnt/etc/hosts
+echo "127.0.1.1    ${HOSTNAME} ${HOSTNAME}.localhost" >>/mnt/etc/hosts
 
 # Setting root password
 echo "*** Setting root password ***"
@@ -110,7 +122,7 @@ arch-chroot /mnt useradd -m $USERNAME -G wheel
 arch-chroot /mnt passwd $USERNAME
 
 # Update sudoers
-cp /etc/sudoers /etc/sudoers.back
+cp /mnt/etc/sudoers /mnt/etc/sudoers.back
 if [[ $SUDO_WITH_PASSWORD == 0 ]]; then
 	echo '%wheel ALL=(ALL) NOPASSWD: ALL' >>/mnt/etc/sudoers
 else
@@ -129,7 +141,7 @@ arch-chroot /mnt mkinitcpio -P
 
 # Install bootloader
 arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=$BOOT_DIRECTORY --bootloader-id=GRUB
-arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+arch-chroot /mnt grub-mkconfig -o $BOOT_DIRECTORY/grub/grub.cfg
 
 # Edit pacman.conf
 cp /mnt/etc/pacman.conf /mnt/etc/pacman.conf.back
