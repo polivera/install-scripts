@@ -77,7 +77,7 @@ pacstrap /mnt \
 	linux linux-firmware linux-headers dkms $UCODE_TYPE \
 	btrfs-progs cryptsetup terminus-font plymouth \
 	networkmanager avahi bluez bluez-utils \
-	sudo git neovim
+	sudo git neovim reflector
 
 # Create Swapfile
 arch-chroot /mnt btrfs filesystem mkswapfile --size ${SWAP_SIZE_GB}g --uuid clear /swap/swapfile

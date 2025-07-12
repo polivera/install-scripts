@@ -84,7 +84,7 @@ pacstrap /mnt \
 	linux-zen linux-firmware linux-headers dkms $UCODE_TYPE \
 	btrfs-progs grub grub-btrfs efibootmgr \
 	networkmanager avahi bluez bluez-utils \
-	sudo git neovim reflector
+	sudo git neovim reflector plymouth
 
 # Create Swapfile
 arch-chroot /mnt btrfs filesystem mkswapfile --size ${SWAP_SIZE_GB}g --uuid clear /swap/swapfile
@@ -135,7 +135,7 @@ cp /mnt/etc/mkinitcpio.conf /mnt/etc/mkinitcpio.conf.back
 echo "MODULES=(btrfs)" >/mnt/etc/mkinitcpio.conf
 echo "BINARIES=()" >>/mnt/etc/mkinitcpio.conf
 echo "FILES=()" >>/mnt/etc/mkinitcpio.conf
-echo "HOOKS=(base systemd autodetect microcode modconf kms keyboard keymap consolefont block filesystems fsck)" >>/mnt/etc/mkinitcpio.conf
+echo "HOOKS=(base systemd autodetect microcode modconf kms keyboard keymap plymouth consolefont block filesystems fsck)" >>/mnt/etc/mkinitcpio.conf
 
 # Run mkinitcpio
 arch-chroot /mnt mkinitcpio -P
