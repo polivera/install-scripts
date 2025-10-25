@@ -19,20 +19,9 @@ sudo pacman -S \
 
 # Essential Wayland utilities
 sudo pacman -S \
-	waybar \
 	wofi \
-	swww \
-	grim \
-	slurp \
-	wl-clipboard \
-	cliphist \
-	swaynotificationcenter \
-	swaylock-effects \
-	swayidle \
-	brightnessctl \
-	playerctl \
-	pavucontrol \
 	--needed --noconfirm
+
 
 # File manager and basic apps
 sudo pacman -S \
@@ -60,21 +49,10 @@ sudo pacman -S \
 	pipewire-jack \
 	--needed --noconfirm
 
-# Additional utilities
-sudo pacman -S \
-	network-manager-applet \
-	blueman \
-	thunar \
-	thunar-volman \
-	tumbler \
-	ffmpegthumbnailer \
-	--needed --noconfirm
-
 # AUR packages for enhanced experience
 yay -S \
 	hyprpicker \
-	grimblast-git \
-	waybar-hyprland-git \
+	ags-hyprpanel-git \
 	wlogout \
 	--needed --noconfirm
 
