@@ -18,7 +18,8 @@ sudo pacman -S \
     xwayland-satellite \
     network-manager-applet \
     pavucontrol \
-    brave \
+    vivaldi \
+    vivaldi-ffmpeg-codecs \
     --needed --noconfirm
 
 # Application launcher: wofi
@@ -32,3 +33,8 @@ sudo pacman -S \
 # Browser: Brave
 # Network: network-manager-applet
 # Sound: pavucontrol
+
+yay -S \
+	1password \
+	ttf-iosevkaterm-nerd \
+	--needed --noconfirm

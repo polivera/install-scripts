@@ -26,6 +26,8 @@ sudo pacman -S \
 	libpipewire \
 	lib32-libpipewire \
 	pipewire-audio \
+	pipewire-pulse \
+	wireplumber \
 	--needed --noconfirm
 
 # Video
