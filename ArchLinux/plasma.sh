@@ -13,18 +13,16 @@ sudo pacman -S \
 	wl-clipboard \
 	qt6-multimedia-ffmpeg \
 	pipewire-jack \
-	ttf-joypixels \
 	pyside6 \
 	cronie \
-	phonon-qt5-gstreamer \
 	ffmpeg \
 	alacritty \
 	firefox \
+    vivaldi \
+    vivaldi-ffmpeg-codecs \
 	spotify-launcher \
 	power-profiles-daemon \
 	--needed --noconfirm
-
-sudo pacman -R kmix --noconfirm
 
 yay -S \
 	1password \

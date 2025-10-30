@@ -9,8 +9,6 @@ sudo pacman -S \
 
 # Graphics drivers (AMD-specific)
 sudo pacman -S \
-	amdvlk \
-	lib32-amdvlk \
 	vulkan-tools \
 	--needed --noconfirm
 
@@ -28,8 +26,3 @@ sudo pacman -S \
 	lib32-mangohud \
 	--needed --noconfirm
 
-# Audio support for games
-sudo pacman -S \
-	lib32-pipewire \
-	lib32-pipewire-jack \
-	--needed --noconfirm

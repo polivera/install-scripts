@@ -108,3 +108,14 @@ if [ ! -d "$HOME"/Projects/Personal/nvim-conf ]; then
 	ln -s "$HOME"/Projects/Personal/nvim-conf "$HOME"/.config/nvim
 	npm install -g neovim
 fi
+
+# Local LLM Stuff
+sudo pacman -S \
+    rocm-hip-sdk \
+    rocm-opencl-runtime \
+    --needed --noconfirm
+
+sudo usermod -aG video,render $USER
+
+yay -S ollama --needed --noconfirm
+
