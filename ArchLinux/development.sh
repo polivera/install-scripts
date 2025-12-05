@@ -60,8 +60,9 @@ yay -S \
 	grpcurl \
 	--needed --noconfirm
 
-# Autoenv
-npm install -g '@hyperupcall/autoenv'
+# Autoenv / Direnv
+# npm install -g '@hyperupcall/autoenv'
+sudo pacman -S direnv --noconfirm
 
 # Neovim -----------------------------------------------------------------------
 sudo pacman -S \
@@ -78,7 +79,7 @@ fi
 sudo pacman -S \
     rocm-hip-sdk rocm-opencl-runtime \
     ollama \
-    ollama-rocm \
+    ollama-rocmi \
     --needed --noconfirm
 
 sudo usermod -aG video,render $USER
